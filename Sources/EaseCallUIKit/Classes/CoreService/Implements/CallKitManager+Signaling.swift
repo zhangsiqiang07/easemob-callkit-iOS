@@ -8,7 +8,7 @@
 import Foundation
 import AgoraRtcKit
 
-@objcMembers public extension CallKitManager: ChatEventsListener {
+extension CallKitManager: ChatEventsListener {
     
     public func messagesDidReceive(_ aMessages: [ChatMessage]) {
         for message in aMessages {
@@ -1616,7 +1616,7 @@ extension CallKitManager: CallMessageService {
         }
     }
     
-    func quitCall() {
+    public func quitCall() {
         if self.callInfo != nil {
             self.hadJoinedChannel = false
             AudioPlayerManager.shared.playAudio(from: "busy")
