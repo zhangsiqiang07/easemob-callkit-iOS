@@ -8,7 +8,7 @@
 import Foundation
 import AgoraRtcKit
 
-extension CallKitManager: ChatEventsListener {
+@objcMembers public extension CallKitManager: ChatEventsListener {
     
     public func messagesDidReceive(_ aMessages: [ChatMessage]) {
         for message in aMessages {
