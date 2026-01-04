@@ -19,7 +19,7 @@ class AudioPlayerManager: NSObject {
     
     private override init() {
         super.init()
-        setupAudioSession()
+//        setupAudioSession()
 //        NotificationCenter.default.addObserver(self, selector: #selector(routeChanged), name: AVAudioSession.routeChangeNotification, object: nil)
     }
     
@@ -52,6 +52,7 @@ class AudioPlayerManager: NSObject {
     /// 播放音频文件（循环播放）
     /// - Parameter url: 音频文件的URL
     func playAudio(from url: URL) {
+        setupAudioSession()
         // 如果是同一个URL，直接返回
         if currentURL == url && audioPlayer?.isPlaying == true {
             print("🎵 已在播放相同音频")

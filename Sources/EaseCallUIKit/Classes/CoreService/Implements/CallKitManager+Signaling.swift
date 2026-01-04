@@ -684,7 +684,7 @@ extension CallKitManager: CallMessageService {
         DispatchQueue.main.async {
             // Setup video scenario
             self.engine?.setVideoScenario(.application1V1Scenario)
-            
+            self.engine?.setParameters("{\"che.audio.mix_with_others\":false}")
             // Show call UI first
             var callVC: UIViewController
             if type == .singleVideo {
@@ -1466,6 +1466,7 @@ extension CallKitManager: CallMessageService {
                 }
             }
             self.engine?.enableAudio()
+            self.engine?.setParameters("{\"che.audio.mix_with_others\":false}")
             self.enableLocalAudio(true)
             self.answerCall(callId: call.callId, callerId: call.callerId, result: kAcceptResult, callerDeviceId: call.callerDeviceId)
         }
