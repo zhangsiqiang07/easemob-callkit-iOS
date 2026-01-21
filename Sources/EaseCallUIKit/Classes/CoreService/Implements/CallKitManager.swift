@@ -163,7 +163,7 @@ public let CallKitVersion = "4.18.1"
         let configuration = AgoraVideoEncoderConfiguration()
         configuration.orientationMode = .fixedPortrait
         configuration.dimensions = CGSize(width: 1280, height: 720)
-        configuration.frameRate = .fps30
+        configuration.frameRate = AgoraVideoFrameRate.fps30
         self.engine?.setVideoEncoderConfiguration(configuration)
         
         let cameraConfig = AgoraCameraCapturerConfiguration()
