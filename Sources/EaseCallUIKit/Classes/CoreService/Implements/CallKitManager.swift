@@ -160,10 +160,14 @@ public let CallKitVersion = "4.18.1"
         } else {
             self.engine = AgoraRtcEngineKit.sharedEngine(withAppId: self.appID, delegate: self)
         }
-        let configuration = AgoraVideoEncoderConfiguration()
-        configuration.orientationMode = .fixedPortrait
-        configuration.dimensions = CGSize(width: 1280, height: 720)
-        configuration.frameRate = AgoraVideoFrameRate.fps30
+        // 修改后（最安全）
+        let configuration = AgoraVideoEncoderConfiguration(
+            size: CGSize(width: 1280, height: 720),
+            frameRate: .fps30,  // Swift 枚举标准写法，类型明确
+            bitrate: 0,
+            orientationMode: .fixedPortrait,
+            mirrorMode: .auto
+        )
         self.engine?.setVideoEncoderConfiguration(configuration)
         
         let cameraConfig = AgoraCameraCapturerConfiguration()
