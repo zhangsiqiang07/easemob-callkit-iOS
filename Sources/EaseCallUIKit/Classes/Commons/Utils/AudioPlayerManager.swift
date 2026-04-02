@@ -42,6 +42,7 @@ class AudioPlayerManager: NSObject {
     /// 播放音频文件（循环播放）
     /// - Parameter urlString: 音频文件的URL字符串
     func playAudio(from fileName: String) {
+        setupAudioSession()
         guard let path = Bundle.callBundle.path(forResource: fileName, ofType: "mp3") else {
             consoleLogInfo("Ringtone bundle file not found", type: .error)
             return
@@ -96,10 +97,16 @@ class AudioPlayerManager: NSObject {
             print("⏸️ 暂停播放")
         }
         audioPlayer?.pause()
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("❌ 恢复其他音频会话失败: \(error.localizedDescription)")
+        }
     }
     
     /// 恢复播放
     func resumeAudio() {
+        setupAudioSession()
         if audioPlayer?.isPlaying == false {
             audioPlayer?.play()
             print("▶️ 恢复播放")
@@ -155,6 +162,12 @@ extension AudioPlayerManager: AVAudioPlayerDelegate {
             print("🎵 音频播放完成")
         } else {
             print("❌ 音频播放异常结束")
+        }
+        
+        do {
+            try AVAudioSession.sharedInstance().setActive(false, options: .notifyOthersOnDeactivation)
+        } catch {
+            print("❌ 恢复其他音频会话失败: \(error.localizedDescription)")
         }
     }
     

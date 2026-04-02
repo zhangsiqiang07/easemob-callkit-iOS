@@ -559,7 +559,9 @@ extension CallKitManager: ChatEventsListener {
     }
     
     func handleError(_ error: ChatError) {
-        self.hangup()
+        if error.code != .userPermissionDenied {
+            self.hangup()
+        }
         for listener in self.listeners.allObjects {
             listener.didOccurError?(error: CallError(CallError.IM(error: error), module: .im))
         }
@@ -706,6 +708,7 @@ extension CallKitManager: CallMessageService {
                 // Play dialing sound
                 AudioPlayerManager.shared.playAudio(from: "dialing")
                 
+                self.engine?.setParameters("{\"che.audio mix_with_others\": false}")
                 // Now send the signaling message (will join channel after success)
                 self.sendCallSignaling(userId: userId, type: type, callId: callId, channelName: channelName, extensionInfo: extensionInfo)
             }
@@ -854,6 +857,7 @@ extension CallKitManager: CallMessageService {
                         return
                     }
                     
+                    self.engine?.setParameters("{\"che.audio mix_with_others\": false}")
                     // Start group call with selected participants
                     self.startGroupCallWithParticipants(
                         ids: ids,
@@ -1449,6 +1453,7 @@ extension CallKitManager: CallMessageService {
     
     public func accept() {
         AudioPlayerManager.shared.stopAudio()
+        self.engine?.setParameters("{\"che.audio mix_with_others\": false}")
         if let call = self.callInfo {
             switch call.type {
             case .singleAudio:
@@ -1569,6 +1574,14 @@ extension CallKitManager: CallMessageService {
                     self.updateCallEndReason(.abnormalEnd,false)
                 })
             }
+            if let call = self.callInfo {
+                if call.type == .singleVideo || call.type == .groupCall {
+                    self.checkCameraPermission()
+                    self.checkMicrophonePermission()
+                } else {
+                    self.checkMicrophonePermission()
+                }
+            }
             completion(true)
         }) ?? 0
         if result != 0 {
@@ -1664,7 +1677,9 @@ extension CallKitManager: CallMessageService {
             self.callInfo?.extensionInfo = nil
             self.callInfo?.state = .idle
             self.callInfo?.duration = 0
-            
+            DispatchQueue.main.asyncAfter(deadline: .now() + 3.0) {
+                AudioPlayerManager.shared.stopAudio()
+            }
         }
     }
     
