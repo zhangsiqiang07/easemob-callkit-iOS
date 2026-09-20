@@ -109,7 +109,7 @@ class LiveCommunicationManager: NSObject {
 extension LiveCommunicationManager: PKPushRegistryDelegate {
     func pushRegistry(_ registry: PKPushRegistry, didUpdate pushCredentials: PKPushCredentials, for type: PKPushType) {
         consoleLogInfo("[LiveCommunicationManager] PushKit token updated", type: .debug)
-        ChatClient.shared().bindPushKitToken(pushCredentials.token)
+        ChatClient.shared().registerPushKitToken(pushCredentials.token)
     }
     
     func pushRegistry(_ registry: PKPushRegistry, didReceiveIncomingPushWith payload: PKPushPayload, for type: PKPushType, completion: @escaping () -> Void) {
@@ -315,4 +315,3 @@ extension LiveCommunicationManager: ConversationManagerDelegate
         CallKitManager.shared.hangup()
     }
 }
-
